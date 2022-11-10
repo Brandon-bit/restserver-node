@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 const env = dotenv.config().parsed;
 
 import {routerUsuario} from '../routes/usuario.js';
+import { dbConnection } from '../db/config.js';
 
 export default class Server {
 
@@ -13,11 +14,19 @@ export default class Server {
         this.port = env.PORT;
         this.usuarioPath = '/api/usuarios';
 
+        // * Conectar a la base de datos
+        this.conectarDB();
+
+
         // * MIDDLEWARES
         this.middlewares();
 
         // * RUTAS
         this.routes();
+    }
+
+    async conectarDB(){
+        await dbConnection();
     }
 
     middlewares(){
