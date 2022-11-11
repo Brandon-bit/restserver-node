@@ -8,11 +8,20 @@ const esRolValido = async(rol = '') => {
     }
 }
 
-const emailExiste = async(email = '') => {
-    const emailExiste = await Usuario.findOne({ email });
+const emailExiste = async(email) => {
+    console.log(email);
+    const emailExiste = await Usuario.findOne( { email } );
+    console.log(emailExiste);
     if( emailExiste ){
         throw new Error(`El email ya ha sido registrado`);
     }
 }
 
-export { esRolValido, emailExiste };
+const idExiste = async( id ) => {
+    const idExiste = await Usuario.findById( id );
+    if( !idExiste ){
+        throw new Error(`El usuario no se ha encontrado`);
+    }
+}
+
+export { esRolValido, emailExiste, idExiste };

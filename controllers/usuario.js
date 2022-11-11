@@ -2,21 +2,30 @@ import { response } from 'express';
 import bcryptjs from 'bcryptjs';
 import { Usuario } from '../models/usuario.js';
 
-const usuarioGet = ( req, res = response ) => {
+const usuarioGet = async( req, res = response ) => {
 
-    const {nombre = "Sin nombre", apellido = "Sin apellido"} = req.query;
+    const { limite = 5, desde = 0 } = req.query;
+    const query = { estado: true };
 
+    // const usuarios = await Usuario.find().skip( Number( desde ) ).limit( Number( limite ) );
+
+    const [ total, usuarios ] = await Promise.all([
+        Usuario.count( query ),
+        Usuario.find( query ).skip( Number( desde ) ).limit( Number( limite ) )
+    ]);
+
+    
     res.json({
-        "msg": "Get API - Desde el controlador",
-        nombre,
-        apellido
+        total, 
+        usuarios
     });
+
 }
 
 const usuarioPut = async( req, res = response ) => {
 
     const { id } = req.params;
-    const { password, google, correo, ...resto } = req.body;
+    const { _id, password, google, correo, ...resto } = req.body;
 
     // * TODO para validar contra base de datos
     if( password ){
