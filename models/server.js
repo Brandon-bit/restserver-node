@@ -4,7 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 const env = dotenv.config().parsed;
 
-import {routerUsuario} from '../routes/usuario.js';
+import { routerUsuario } from '../routes/usuario.js';
+import { routerAuth } from '../routes/auth.js';
 import { dbConnection } from '../db/config.js';
 
 export default class Server {
@@ -13,6 +14,7 @@ export default class Server {
         this.app = express();
         this.port = env.PORT;
         this.usuarioPath = '/api/usuarios';
+        this.authPath = '/api/auth';
 
         // * Conectar a la base de datos
         this.conectarDB();
@@ -42,6 +44,7 @@ export default class Server {
     }
 
     routes() {
+        this.app.use( this.authPath, routerAuth);
         this.app.use( this.usuarioPath, routerUsuario );
     }
 
